@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+html{
+    font-family: 'Poppins', sans-serif;
+
+}
+
+.grid-template-areas{
+    grid-template-areas: "sidenav main-content"
+    "now-playing now-playing";
+}
+
+.content{
+    grid-area: main-content;
+}
+.now-playing{
+    grid-area: now-playing;
+}
+.sidenav{
+    grid-area: sidenav;
+}
