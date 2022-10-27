@@ -14,14 +14,17 @@ const loadUserProfile = async () => {
   const defaultImg = document.querySelector("#default-img");
   const profileBtn = document.querySelector("#user-profile-btn");
   const displayNameElement = document.querySelector("#display-name");
-
+  const userImg = document.querySelector(".user-img");
   const { display_name: displayName, images } = await fetchRequest(
     ENDPOINT.userInfo
   );
-
+  
   displayNameElement.textContent = displayName;
   if (images?.length) {
     defaultImg.classList.add("hidden");
+    const imagesUrl = images[0].url;
+    console.log(imagesUrl);
+    userImg.innerHTML = `<img src="${imagesUrl}" class="h-6 w-6 object-cover rounded-full" /> `;
   } else {
     defaultImg.classList.remove("hidden");
   }
@@ -80,6 +83,7 @@ const fillContentForDashboard = () => {
   pageContentElement.innerHTML = innerHTML;
 };
 
+//Format Time into MINs
 const formatTime = (duration) => {
   const min = Math.floor(duration / 60000);
   const sec = ((duration % 6000) / 1000).toFixed(0);
@@ -107,7 +111,7 @@ const loadPlaylistTracks = ({ tracks }) => {
     let { id, artists, name, album, duration_ms: duration } = trackitem.track;
     let track = document.createElement("section");
     track.className =
-      "track grid grid-cols-[50px_2fr_1fr_50px] hover:bg-black-secondary py-2 items-center m-2 ";
+      "track grid grid-cols-[50px_2fr_1fr_50px] hover:bg-black-secondary py-2 items-center m-2 rounded-md";
     let image = album.images.find((img) => img.height === 64);
     track.id = id;
     track.innerHTML = `
@@ -129,7 +133,7 @@ const loadPlaylistTracks = ({ tracks }) => {
     const playBtn = document.createElement("button")
     playBtn.id = `play-track${id}`;
     playBtn.className =" absolute play w-full text-lg invisible left-[0px]";
-    playBtn.textContent = "▶️";
+    playBtn.innerHTML = "▶️";
     track.querySelector("p").appendChild(playBtn)
     track.addEventListener("click",(event)=> onTrackSelection(event,id))
     playBtn.addEventListener("click",(event) => onPlayTrack(event, {}))
@@ -142,11 +146,14 @@ const fillContentForPlatlist = async (playlistId) => {
   const pageContentElement = document.querySelector("#page-content");
   pageContentElement.innerHTML = `<header>
             <nav>
-            <ul class="grid grid-cols-[50px_2fr_1fr_50px]">
+            <ul class="grid grid-cols-[50px_2fr_1fr_50px] py-4 px-4 ">
                 <li class=" justify-self-center ">#</li>
                 <li>Title</li>
                 <li>Album</li>
-                <li>🕑</li>
+                <li>  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+              </li>
             </ul>
             </nav>
             </header>

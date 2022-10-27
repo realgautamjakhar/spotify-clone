@@ -5,10 +5,9 @@
 @tailwind utilities;
 
 
-
 html{
     font-family: 'Poppins', sans-serif;
-
+    
 }
 
 .grid-template-areas{
@@ -24,4 +23,20 @@ html{
 }
 .sidenav{
     grid-area: sidenav;
+}
+
+.scrollbarhidden::-webkit-scrollbar {
+    display: none;
+}
+.scrollbarhidden {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.track:hover .track-no, .track:selected .track-no {
+    visibility: hidden;
+}
+.track:hover .play,.track.selected .play {
+    visibility: visible;
+    cursor: pointer;
 }
