@@ -7,17 +7,12 @@ const getAccessToken = () => {
     const accessToken = localStorage.getItem(ACCESS_TOKEN);
     const expireIn = localStorage.getItem(EXPIRES_IN);
     const tokenType = localStorage.getItem(TOKEN_TYPE);
-
-
     if( Date.now() < expireIn){
         return {accessToken , tokenType}
     }
     else {
         logout();
-    }
-
-
-    
+    }  
 }
 
 const createAPIConfig = ({accessToken, tokenType}, method="GET") => {

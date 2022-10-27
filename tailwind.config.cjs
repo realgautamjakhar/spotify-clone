@@ -13,6 +13,7 @@ module.exports = {
         "primary":"#FFFFFF",
         "secondary":"#b3b3b3",
         "gray":"#535353",
+        "pure-black":"rgb(0 0 0)"
       }
     },
     gridTemplateColumns:{

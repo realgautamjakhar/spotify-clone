@@ -33,10 +33,63 @@ html{
     scrollbar-width: none;  /* Firefox */
 }
 
-.track:hover .track-no, .track:selected .track-no {
+.track:hover .track-no, .track.selected .track-no {
     visibility: hidden;
 }
 .track:hover .play,.track.selected .play {
     visibility: visible;
     cursor: pointer;
+}
+
+.track.playing .track-no, .track.playing .song-title{
+    color: theme("colors.green");
+}
+
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+   
+    cursor: pointer;
+    width: 100px;
+}
+input[type="range"]::-webkit-slider-runnable-track{
+    background: theme("colors.secondary");
+    border-radius: 1rem;
+    height: .2rem;
+}
+input[type="range"]::-moz-range-track {
+    border-radius: 1rem;
+    height: 0.5rem;
+}
+input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance: none;
+    appearance: none;
+    height: 1rem;
+    width: 1rem;
+    background: theme("colors.green");
+    margin-top: -6px;
+    border-radius: 50%;
+}
+input[type="range"]::-moz-range-thumb{
+    -webkit-appearance: none;
+    appearance: none;
+    height: 1rem;
+    width: 1rem;
+    background: white;
+    border-radius: 50%;
+}
+input[type="range"]:focus{
+    outline: none;
+}
+input[type="range"]:focus::-webkit-slider-thumb{
+    border: 1px solid theme("colors.secondary");
+    background: theme("colors.green");
+    box-shadow: 0px 0px 50px 5px theme("colors.green");
+
+}
+input[type="range"]:focus::-moz-range-thumb {
+    border: 1px solid theme("colors.secondary");
+    background: theme("colors.green");
+    box-shadow: 0px 0px 50px 5px theme("colors.green");
 }
