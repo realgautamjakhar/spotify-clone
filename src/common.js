@@ -9,7 +9,8 @@ export const ENDPOINT = {
     featuredPlaylist:"browse/featured-playlists",
     toplists:"browse/categories/toplists/playlists",
     playlist:"playlists",
-    userPlaylist: "me/playlists"
+    userPlaylist: "me/playlists",
+    search: "search"
 }
 export const logout = () =>{
     localStorage.removeItem(ACCESS_TOKEN)
@@ -20,7 +21,8 @@ export const logout = () =>{
 
 export const SECTIONTYPE = {
     DASHBOARD:"DASHBOARD",
-    PLAYLIST:"PLAYLIST"
+    PLAYLIST:"PLAYLIST",
+    SEARCH:"SEARCH"
 }
 
 export const setItemInLocalStorage = (key,value) => localStorage.setItem(key,JSON.stringify(value));

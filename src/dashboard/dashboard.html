@@ -22,7 +22,7 @@
           <section class="w-full mt-4">
             <ul class="flex flex-col gap-4 text-base text-secondary" >
               <li class="flex items-center gap-4 hover:text-primary hover:cursor-pointer " > <span class="material-symbols-outlined">home</span> <span><a href="/">Home</a></span></li>
-              <li class="flex justify-start items-center gap-4 hover:text-primary hover:cursor-pointer " > <span class="material-symbols-outlined">search</span> <span>Search</span></li>
+              <li id="search-btn" class="flex justify-start items-center gap-4 hover:text-primary hover:cursor-pointer " > <span class="material-symbols-outlined">search</span> <span>Search</span></li>
             </ul>
           </section>
           <section id="user-playlist" class="w-full text-secondary pt-4 border-t border-light-black">
@@ -44,7 +44,7 @@
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  class="h-6 w-6 bg-slate-400 rounded-sm"
+                  class="h-6 w-6 bg-slate-400 rounded-full"
                 >
                   <path
                     stroke-linecap="round"
@@ -66,10 +66,10 @@
             </ul>
           </nav>
           </header>
-          <article id = "cover-content"  class="absolute text-6xl grid content-center w-full h-[400px] -z-[1] top-0 px-8 py-4 bg-gradient-to-b from-light-black to-black-base">
-          </section>
+          <article id = "cover-content"  class="absolute text-6xl grid content-center w-full h-[400px] top-0 px-8 py-4 bg-gradient-to-b from-light-black to-black-base">
+          <img src="../assets/spotify-icon-green-logo-8.png" alt="">
         </article>
-        <section id = "page-content" class="bg-black-base  mt-[330px]" >
+        <section id = "page-content" class="bg-black-base min-h-full mt-[330px]" >
           
         </section>
       </article>

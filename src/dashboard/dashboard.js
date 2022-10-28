@@ -1,4 +1,3 @@
-import { doc } from "prettier";
 import { fetchRequest } from "../api";
 import {
   ENDPOINT,
@@ -10,6 +9,8 @@ import {
 } from "../common";
 
 const audio = new Audio();
+let displayName;
+var userImageUrl;
 
 const onProfileClick = (event) => {
   event.stopPropagation();
@@ -20,24 +21,31 @@ const onProfileClick = (event) => {
   }
 };
 
-const loadUserProfile = async () => {
-  const defaultImg = document.querySelector("#default-img");
-  const profileBtn = document.querySelector("#user-profile-btn");
-  const displayNameElement = document.querySelector("#display-name");
-  const userImg = document.querySelector(".user-img");
-  const { display_name: displayName, images } = await fetchRequest(
-    ENDPOINT.userInfo
-  );
-  const userdetails = await fetchRequest(ENDPOINT.userInfo);
-  displayNameElement.textContent = displayName;
-  if (images?.length) {
-    defaultImg.classList.add("hidden");
-    const imagesUrl = images[0].url;
-    userImg.innerHTML = `<img src="${imagesUrl}" class="h-6 w-6 object-cover rounded-full" /> `;
-  } else {
-    defaultImg.classList.remove("hidden");
-  }
-  profileBtn.addEventListener("click", onProfileClick);
+const loadUserProfile = () => {
+  return new Promise(async(resolve,reject)=>{
+    const defaultImg = document.querySelector("#default-img");
+    const profileBtn = document.querySelector("#user-profile-btn");
+    const displayNameElement = document.querySelector("#display-name");
+    const userImg = document.querySelector(".user-img");
+    
+    const { display_name: displayName, images } = await fetchRequest(
+      ENDPOINT.userInfo
+    );
+    displayNameElement.textContent = displayName;
+    let userImageUrl;
+    if (images?.length) {
+      defaultImg.classList.add("hidden");
+      const imagesUrl = images[0].url;
+      userImageUrl = images[0].url;
+      userImg.innerHTML = `<img src="${imagesUrl}" class="h-6 w-6 object-cover rounded-full" /> `;
+    } else {
+      defaultImg.classList.remove("hidden");
+    }
+    console.log(userImageUrl);
+    profileBtn.addEventListener("click", onProfileClick);
+    resolve({displayName,userImageUrl})
+  })
+  
 };
 
 const onPlaylistItemClicked = (event, id) => {
@@ -86,7 +94,16 @@ const fillContentForDashboard = () => {
   if(coverElement.getAttribute("style")){
     coverElement.removeAttribute("style")
   }
-  coverElement.innerHTML = `Hello User!`;
+  console.log(userImageUrl);
+  coverElement.innerHTML = ` 
+  <section class="flex items-center gap-4">
+  <img class="w-[200px] h-[200px] rounded-full object-cover shadow-2xl" src="${userImageUrl?? "../assets/spotify-icon-green-logo-8.png"}" alt="">
+  <section>
+    <h4 class="text-base">Hello</h4>
+    <h2 class="text-4xl ">${displayName}</h2>
+  </section>
+  </section>
+  `;
   let innerHTML = "";
 
   for (let [type, id] of playlistMap) {
@@ -118,6 +135,8 @@ const onTrackSelection = (event, id) => {
   });
 };
 
+
+
 const updateIconsForPlayMode = (id) => {
   const playBtn = document.querySelector("#play");
   playBtn.querySelector("span").textContent = "pause_circle";
@@ -138,6 +157,7 @@ const updateIconsForPauseMode = (id) => {
     playBtnFromTracks.textContent = "play_arrow";
   }
 };
+
 
 const togglePlay = () => {
   if (audio.src) {
@@ -162,6 +182,8 @@ const findCurrentTrack = () => {
   return null;
 };
 
+// NEXT PREV Button functions
+
 const playNextTrack = () => {
   const { currentTrackIndex = -1, tracks = null } = findCurrentTrack() ?? {};
   if (currentTrackIndex > -1 && currentTrackIndex < tracks.length - 1) {
@@ -174,6 +196,8 @@ const playPrevTrack = () => {
     playTrack(null, tracks[currentTrackIndex - 1]);
   }
 };
+
+// Playing songs 
 
 const playTrack = (
   event,
@@ -192,6 +216,7 @@ const playTrack = (
     audioControl.setAttribute("data-track-id", id);
 
     nowPlayingSongImage.src = image.url;
+    nowPlayingSongImage.className = ("h-[64px] w-[64px]");
     nowPlayingSongName.textContent = name;
     nowPlayingSongArtist.textContent = artistName;
 
@@ -200,6 +225,8 @@ const playTrack = (
     audio.play();
   }
 };
+
+// Playlist tracks
 
 const loadPlaylistTracks = ({ tracks }) => {
   const trackSection = document.querySelector("#tracks");
@@ -216,8 +243,7 @@ const loadPlaylistTracks = ({ tracks }) => {
       preview_url: previewUrl,
     } = trackitem.track;
     let track = document.createElement("section");
-    track.className =
-      "track grid grid-cols-[50px_2fr_1fr_50px] hover:bg-black-secondary py-2 items-center m-2 rounded-md";
+    track.className ="track grid grid-cols-[50px_2fr_1fr_50px] hover:bg-black-secondary py-2 items-center m-2 rounded-md";
     let image = album.images.find((img) => img.height === 64);
     track.id = id;
     let artistName = Array.from(artists, (artist) => artist.name).join(", ");
@@ -305,6 +331,8 @@ const fillContentForPlatlist = async (playlistId) => {
   loadPlaylistTracks(playlist);
 };
 
+// Onscroll 
+
 const onScroll = (e) => {
   const { scrollTop } = e.target;
   const header = document.querySelector(".header");
@@ -331,6 +359,8 @@ const onScroll = (e) => {
   }
 };
 
+//Load Section to track which page you are on and change contain based on that
+
 const loadSection = (section) => {
   if (section.type === SECTIONTYPE.DASHBOARD) {
     fillContentForDashboard();
@@ -338,8 +368,12 @@ const loadSection = (section) => {
   } else if (section.type === SECTIONTYPE.PLAYLIST) {
 
     fillContentForPlatlist(section.playlistId);
+  } else if (section.type === SECTIONTYPE.SEARCH){
+    searchScreen();
   }
 };
+
+//Sidenav UserprofilePlaylist Functions
 
 const onUserPlaylistClicked = (id) => {
   const section = { type: SECTIONTYPE.PLAYLIST, playlistId: id };
@@ -360,10 +394,82 @@ const loadUserPlaylists = async () => {
   }
 };
 
-document.addEventListener("DOMContentLoaded", () => {
+
+// Search Function
+
+const searchReq = async (searchValue) =>{
+  const query = searchValue;
+  const searchResult = await fetchRequest(`${ENDPOINT.search}?q=${query}&type=track`)
+  
+  const searchTracks = document.querySelector("#search-tracks");
+
+
+  for(let {id,
+    artists,
+    name,
+    album,
+    duration_ms: duration,
+    preview_url: previewUrl,} of searchResult.tracks.items){
+    const searchTrack = document.createElement("section");
+    console.log(album.images);
+    let image = album.images.find((img) => img.height === 300);
+    searchTrack.className =  "track flex flex-col hover:bg-light-black py-2 items-center m-2 rounded-md bg-black-secondary w-[200] h-[200] p-2";
+    console.log(name,id);
+    searchTrack.id = id;
+    let artistName = Array.from(artists, (artist) => artist.name).join(", ");
+    searchTrack.innerHTML =`<p class=" relative w-200 flex justify-self-center place-content-center"></p>
+                            <section class="flex flex-col items-center gap-2">
+                            <img class="h-auto w-full" src="${image.url}" alt="${name}">
+                            <h2 class="song-title text-base font-semibold text-primary line-clamp-1">${name} <span class="text-xs text-secondary">${formatTime(duration)}</span></h2>
+                            <p class="text-xs text-secondary line-clamp-1 ">${artistName}</p>
+                            </section>
+                            <p class=" text-xs line-clamp-1 " >${album.name}</p>`
+                            
+    searchTracks.appendChild(searchTrack)
+
+    searchTrack.addEventListener("click",(event)=>{
+      console.log("play search track");
+      console.log(event);
+      playTrack(event, {image, name, duration, previewUrl, id });
+    })
+  }
+}
+
+const searchScreen = () =>{
+  const coverElement = document.querySelector("#cover-content");
+  coverElement.classList.add("z-20")
+  coverElement.innerHTML = `
+  <section class="m-auto w-full flex justify-center gap-4 p-4 z-20">
+  <input type="search" placeholder="Search" id="search-input" class="text-white bg-light-black  w-full h-auto outline-none p-2 text-4xl rounded-md z-20">
+    <button id="search-submit" type="submit" class="px-3 py-1 rounded-md h-auto  hover:text-green transition-all z-20" >Search</button>
+  </section>
+  
+  `;
+  const pageContentElement = document.querySelector("#page-content");
+  pageContentElement.innerHTML = `<section id = "search-tracks" class="grid grid-cols-auto-fill-card h-auto "title="Play Song"> </section>`;
+  const searchSubmit = document.querySelector("#search-submit")
+  const searchInput = document.querySelector("#search-input")
+  const searchTracks = document.querySelector("#search-tracks");
+  
+  searchSubmit.addEventListener("click",()=>{
+    let searchValue = searchInput.value;
+    searchTracks.innerHTML ="";
+    console.log(searchValue);
+    searchReq(searchValue)
+  })
+}
+
+const onSearchBtnClicked = () =>{
+  const section = {type:SECTIONTYPE.SEARCH}
+  history.pushState(section,"","search")
+  searchScreen()
+}
+
+
+document.addEventListener("DOMContentLoaded", async() => {
   const volume = document.querySelector("#volume");
   const playBtn = document.querySelector("#play");
-  const totalSongDuration = document.querySelector("#total-song-duration");
+
   const SongDurationCompleted = document.querySelector(
     "#song-duration-completed"
   );
@@ -374,7 +480,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const prev = document.querySelector("#prev");
   let progressInterval;
 
-  loadUserProfile();
+  ({displayName,userImageUrl} = await loadUserProfile());
   loadUserPlaylists();
   const section = { type: SECTIONTYPE.DASHBOARD };
   history.pushState(section, "", "");
@@ -429,6 +535,7 @@ document.addEventListener("DOMContentLoaded", () => {
   next.addEventListener("click", playNextTrack);
   prev.addEventListener("click", playPrevTrack);
 
+  document.querySelector("#search-btn").addEventListener("click",onSearchBtnClicked)
   volume.addEventListener("click", () => {
     audio.volume = volume.value / 100;
   });

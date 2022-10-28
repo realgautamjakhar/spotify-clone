@@ -2,8 +2,8 @@ import { ACCESS_TOKEN , EXPIRES_IN , TOKEN_TYPE } from "../common";
 
 const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
 const scopes = "user-top-read user-follow-read playlist-read-private user-library-read"
-const REDIRECT_URI = import.meta.env.REDIRECT_URI
-const APP_URL = import.meta.env.APP_URL
+const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
+const APP_URL = import.meta.env.VITE_APP_URL;
 
 const authorizeUser = () => {
     const url = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${REDIRECT_URI}&scope=${scopes}&show_dialog=true`
