@@ -11,5 +11,5 @@ export default defineConfig(({ command, mode }) => {
     },
     root: "src"
   }
-  
+
 })
