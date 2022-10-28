@@ -96,8 +96,8 @@ const fillContentForDashboard = () => {
   }
   console.log(userImageUrl);
   coverElement.innerHTML = ` 
-  <section class="flex items-center gap-4">
-  <img class="w-[200px] h-[200px] rounded-full object-cover shadow-2xl" src="${userImageUrl?? "../assets/spotify-icon-green-logo-8.png"}" alt="">
+  <section class="flex items-center gap-8">
+  <img class="w-[200px] h-[200px] rounded-full object-cover shadow-2xl neu-shadow" src="${userImageUrl?? "../assets/spotify-icon-green-logo-8.png"}" alt="">
   <section>
     <h4 class="text-base">Hello</h4>
     <h2 class="text-4xl ">${displayName}</h2>
@@ -288,18 +288,27 @@ const fillContentForPlatlist = async (playlistId) => {
   const playlist = await fetchRequest(`${ENDPOINT.playlist}/${playlistId}`);
   const coverElement = document.querySelector("#cover-content");
   const { name, description, images } = playlist;
-  coverElement.setAttribute(
-    "style",
-    `background-image:url(${images[0].url}); background-position: center ;background-repeat: no-repeat;background-size: cover;box-shadow: inset 0px 10px 100px 180px rgba(0,0,0,0.5);`
-  );
+  let imagesUrl = ``;
+  //Add and removing images bg image
+  if(images.length){
+    coverElement.setAttribute(
+      "style",
+      `background-image:url(${images[0].url}); background-position: center ;background-repeat: no-repeat;background-size: cover;box-shadow: inset 0px 10px 100px 180px rgba(0,0,0,0.5);`
+    );
+    imagesUrl = images[0].url;
+  }else{
+    imagesUrl= ""
+    coverElement.removeAttribute(
+      "style");
+  }
   coverElement.innerHTML = `
-                              <section class="flex items-center gap-4" >
-                              <img class="max-h-[200px] max-w-[200px] drop-shadow-lg" src="${
-                                images[0].url
+                              <section class="flex items-center gap-8" >
+                              <img class="max-h-[200px] max-w-[200px] drop-shadow-lg neu-shadow" src="${
+                                imagesUrl
                               }" alt="">
                               <section>
                               <p class="text-sm line-clamp-1" >Playlist</p>
-                              <h2 id="playlist-name" class="text-8xl line-clamp-1">${
+                              <h2 id="playlist-name" class="text-6xl line-clamp-1">${
                                 name ?? ""
                               }</h2>
                               <p class="text-sm text-secondary line-clamp-1" >${

@@ -93,3 +93,8 @@ input[type="range"]:focus::-moz-range-thumb {
     background: theme("colors.green");
     box-shadow: 0px 0px 50px 5px theme("colors.green");
 }
+
+.neu-shadow {
+    box-shadow:  17px 17px 34px #070707,
+    -17px -17px 34px #1d1d1d;
+}
