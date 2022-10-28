@@ -41,7 +41,7 @@ const loadUserProfile = () => {
     } else {
       defaultImg.classList.remove("hidden");
     }
-    console.log(userImageUrl);
+
     profileBtn.addEventListener("click", onProfileClick);
     resolve({displayName,userImageUrl})
   })
@@ -94,7 +94,6 @@ const fillContentForDashboard = () => {
   if(coverElement.getAttribute("style")){
     coverElement.removeAttribute("style")
   }
-  console.log(userImageUrl);
   coverElement.innerHTML = ` 
   <section class="flex items-center gap-8">
   <img class="w-[200px] h-[200px] rounded-full object-cover shadow-2xl neu-shadow" src="${userImageUrl?? "../assets/spotify-icon-green-logo-8.png"}" alt="">
@@ -420,10 +419,9 @@ const searchReq = async (searchValue) =>{
     duration_ms: duration,
     preview_url: previewUrl,} of searchResult.tracks.items){
     const searchTrack = document.createElement("section");
-    console.log(album.images);
+
     let image = album.images.find((img) => img.height === 300);
     searchTrack.className =  "track flex flex-col hover:bg-light-black py-2 items-center m-2 rounded-md bg-black-secondary w-[200] h-[200] p-2";
-    console.log(name,id);
     searchTrack.id = id;
     let artistName = Array.from(artists, (artist) => artist.name).join(", ");
     searchTrack.innerHTML =`<p class=" relative w-200 flex justify-self-center place-content-center"></p>
@@ -437,8 +435,6 @@ const searchReq = async (searchValue) =>{
     searchTracks.appendChild(searchTrack)
 
     searchTrack.addEventListener("click",(event)=>{
-      console.log("play search track");
-      console.log(event);
       playTrack(event, {image, name, duration, previewUrl, id });
     })
   }
@@ -463,7 +459,7 @@ const searchScreen = () =>{
   searchSubmit.addEventListener("click",()=>{
     let searchValue = searchInput.value;
     searchTracks.innerHTML ="";
-    console.log(searchValue);
+
     searchReq(searchValue)
   })
 }
